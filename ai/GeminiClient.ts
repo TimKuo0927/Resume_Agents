@@ -12,12 +12,12 @@ export class GeminiClient {
     const genAI = new GoogleGenerativeAI(key);
 
     this.model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.5-flash',
     });
   }
 
   async generateText(prompt: string) {
     const result = await this.model.generateContent(prompt);
-    return result.response.text;
+    return result.response.text();
   }
 }
