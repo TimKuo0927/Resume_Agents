@@ -28,7 +28,7 @@ async function main() {
     ...optimizedResume,
   });
 
-  await pdfGenerator.generatePdf(html, 'optimized-resume.pdf');
+  await pdfGenerator.generatePdf(html, '/output/optimized-resume.pdf');
 }
 
 main();
