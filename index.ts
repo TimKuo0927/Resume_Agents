@@ -20,7 +20,7 @@ async function main() {
     resume: userResume,
     job: analysis,
   });
-  console.log('Optimized Resume:', optimizedResume);
+  console.log('Optimized Resume:', JSON.stringify(optimizedResume, null, 2));
 
   const html = await renderResume({
     name: userResume.name,
@@ -28,7 +28,7 @@ async function main() {
     ...optimizedResume,
   });
 
-  await pdfGenerator.generatePdf(html, '/output/optimized-resume.pdf');
+  await pdfGenerator.generatePdf(html, './output/optimized-resume.pdf');
 }
 
 main();

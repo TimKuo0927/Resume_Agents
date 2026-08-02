@@ -8,9 +8,7 @@ export interface Resume {
 }
 
 export interface AiOptimizedResume {
-  summary: string;
-  skills: string[];
-  experiences: Experience[];
+  resume: Resume;
   matchScore: number;
   changes: string[];
 }

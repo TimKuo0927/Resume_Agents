@@ -1,20 +1,217 @@
-<html>
-  <body>
-    <h1>{{name}}</h1>
-    <br />
-    <p>{{summary}}</p>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm 15mm;
+    }
 
-    <br />
-    <h2>Skills</h2>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    <ul>
-      {{skills}}
-    </ul>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #2d3748;
+      line-height: 1.5;
+      font-size: 10.5pt;
+      background-color: #ffffff;
+    }
 
-    <br />
-    <h2>Experience</h2>
+    /*  Header */
+    .header {
+      border-bottom: 2px solid #3182ce;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
 
-    {{experience}}
-    <br />
-  </body>
+    .name {
+      font-size: 22pt;
+      font-weight: 700;
+      color: #1a202c;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .contact-info {
+      font-size: 9.5pt;
+      color: #4a5568;
+    }
+
+    .contact-info span:not(:last-child)::after {
+      content: " • ";
+      margin: 0 4px;
+      color: #cbd5e0;
+    }
+
+    .section {
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 12pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #2b6cb0;
+      letter-spacing: 0.8px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 3px;
+      margin-bottom: 8px;
+    }
+
+    .summary {
+      color: #4a5568;
+      text-align: justify;
+    }
+
+    /* Skills*/
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px 16px;
+    }
+
+    .skill-item {
+      font-size: 9.5pt;
+    }
+
+    .skill-type {
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    /* Experience */
+    .exp-item {
+      margin-bottom: 12px;
+      page-break-inside: avoid;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .exp-role {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .exp-company {
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .exp-duration, .exp-location {
+      font-size: 9pt;
+      color: #718096;
+    }
+
+    .bullets {
+      margin-top: 4px;
+      padding-left: 16px;
+    }
+
+    .bullets li {
+      margin-bottom: 3px;
+      color: #4a5568;
+    }
+
+    /* (Education) */
+    .edu-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .edu-degree {
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    .edu-school {
+      color: #4a5568;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1 class="name">{{resume.name}}</h1>
+    <div class="contact-info">
+      <span>{{resume.email}}</span>
+    </div>
+  </div>
+
+  <!--  Summary -->
+  {{#if resume.summary}}
+  <div class="section">
+    <h2 class="section-title">Professional Summary</h2>
+    <p class="summary">{{resume.summary}}</p>
+  </div>
+  {{/if}}
+
+  <!-- Skills -->
+  {{#if resume.skills.length}}
+  <div class="section">
+    <h2 class="section-title">Skills</h2>
+    <div class="skills-grid">
+      {{#each resume.skills}}
+      <div class="skill-item">
+        <span class="skill-type">{{this.skillType}}:</span> 
+        {{#each this.skillName}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  <!--  Experience -->
+  {{#if resume.experiences.length}}
+  <div class="section">
+    <h2 class="section-title">Experience</h2>
+    {{#each resume.experiences}}
+    <div class="exp-item">
+      <div class="exp-header">
+        <div>
+          <span class="exp-role">{{this.role}}</span> — 
+          <span class="exp-company">{{this.company}}</span>
+        </div>
+        <div class="exp-duration">{{this.duration}}</div>
+      </div>
+      
+      {{#if this.bullets.length}}
+      <ul class="bullets">
+        {{#each this.bullets}}
+        <li>{{this}}</li>
+        {{/each}}
+      </ul>
+      {{/if}}
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+
+  <!-- Education -->
+  {{#if resume.educations.length}}
+  <div class="section">
+    <h2 class="section-title">Education</h2>
+    {{#each resume.educations}}
+    <div class="edu-item">
+      <div>
+        <span class="edu-degree">{{this.degree}}</span> - 
+        <span class="edu-school">{{this.educationName}}</span>
+      </div>
+      <div class="exp-duration">{{this.duration}}</div>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+
+</body>
 </html>
