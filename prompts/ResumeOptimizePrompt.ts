@@ -85,7 +85,6 @@ JSON Output Schema:
     ],
     "educations": ${JSON.stringify(resume.educations)}
   },
-  "matchScore": 85,
   "changes": [
     "Rewrote summary to emphasize React and Node.js skills"
   ]

@@ -10,11 +10,11 @@ export class ResumePdfGenerator {
 
     // await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
-    await page.pdf({ 
-      path: outputPath, 
+    await page.pdf({
+      path: outputPath,
       format: 'A4',
-      printBackground: true, 
-      margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' }
+      printBackground: true,
+      margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
     });
     await browser.close();
   }

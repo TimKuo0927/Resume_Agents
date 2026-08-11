@@ -1,12 +1,14 @@
 import type { Agent } from '../models/BaseAgent.js';
 import type { Resume, AiOptimizedResume } from '../models/Resume.js';
 import type { JobAnalysis } from '../models/JobAnalysis.js';
+import type { Review } from '../models/Review.js';
 import { resumeOptimizePrompt } from '../prompts/ResumeOptimizePrompt.js';
 import { GeminiClient } from '../ai/GeminiClient.js';
 
 export interface ResumeOptimizerInput {
   resume: Resume;
   job: JobAnalysis;
+  review?: Review;
 }
 
 export class ResumeOptimizerAgent implements Agent<

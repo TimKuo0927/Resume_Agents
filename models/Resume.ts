@@ -9,7 +9,6 @@ export interface Resume {
 
 export interface AiOptimizedResume {
   resume: Resume;
-  matchScore: number;
   changes: string[];
 }
 
