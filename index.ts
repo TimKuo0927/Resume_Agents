@@ -27,8 +27,8 @@ async function main() {
 
     ...optimizedResume,
   });
-
-  await pdfGenerator.generatePdf(html, './output/optimized-resume.pdf');
+  const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
+  await pdfGenerator.generatePdf(html, `./output/${timestamp}-resume.pdf`);
 }
 
 main();
