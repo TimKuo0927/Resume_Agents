@@ -19,7 +19,7 @@ export class ResumeOptimizerAgent implements Agent<
   constructor(private ai: GeminiClient) {}
 
   async run(input: ResumeOptimizerInput): Promise<AiOptimizedResume> {
-    const prompt = resumeOptimizePrompt(input.resume, input.job);
+    const prompt = resumeOptimizePrompt(input.resume, input.job, input.review);
     const response = await this.ai.generateText(prompt);
     // Clean the response to extract JSON and parse it
     const cleanJson = response.replace(/```json\n?|\n?```/g, '').trim();

@@ -4,7 +4,7 @@ import { JobAnalyzerAgent } from './agents/JobAnalyzerAgent.js';
 import { ResumeOptimizerAgent } from './agents/ResumeOptimizerAgent.js';
 import { ResumeOutputCheckerAgent } from './agents/ResumeOutputCheckerAgent.js';
 import { jobDescription } from './input/InputJobDescripition.js';
-import { userResume } from './input/InputResume.js';
+import { userOriginalResume } from './input/InputResume.js';
 import { renderResume } from './pdf/templates/render.js';
 import { ResumePdfGenerator } from './pdf/ResumePdfGenerator.js';
 
@@ -21,31 +21,56 @@ async function main() {
 
   // Agent 2: Resume Optimization
   var optimizedResume = await resumeOptimizer.run({
-    resume: userResume,
+    resume: userOriginalResume,
     job: analysis,
   });
   console.log('Optimized Resume:', JSON.stringify(optimizedResume, null, 2));
 
   // Agent 3: Resume Output Checking
-  const review = await resumeOutputChecker.run({
+  let review = await resumeOutputChecker.run({
     AiUpdatedResume: optimizedResume.resume,
     OriginalJobDescription: jobDescription,
   });
   console.log('Resume Review:', JSON.stringify(review, null, 2));
 
-  if (!review.passed) {
-    console.log('Resume review failed. Trying to optimize again based on the review...');
-    optimizedResume = await resumeOptimizer.run({
-      resume: userResume,
-      job: analysis,
-      review: review,
-    });
-  }
+  let bestResume = optimizedResume;
+  let bestReview = review;
 
+  if (!review.passed) {
+    const MAX_RETRIES = 2;
+
+    for (let i = 0; i < MAX_RETRIES; i++) {
+      console.log(
+        `Retrying optimization... Attempt ${i + 1} of ${MAX_RETRIES}`
+      );
+
+      const candidate = await resumeOptimizer.run({
+        resume: bestResume.resume,
+        job: analysis,
+        review: review,
+      });
+
+      const nextReview = await resumeOutputChecker.run({
+        AiUpdatedResume: candidate.resume,
+        OriginalJobDescription: jobDescription,
+      });
+
+      if (nextReview.score > bestReview.score) {
+        bestResume = candidate;
+        bestReview = nextReview;
+      }
+
+      review = nextReview;
+
+      if (review.passed) {
+        break;
+      }
+    }
+  }
   // Generate PDF
   const html = await renderResume({
-    name: userResume.name,
-    ...optimizedResume,
+    name: userOriginalResume.name,
+    ...bestResume,
   });
   const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
   await pdfGenerator.generatePdf(html, `./output/${timestamp}-resume.pdf`);
